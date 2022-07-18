@@ -1,6 +1,7 @@
 ﻿using Assignment.Data;
 using Assignment.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,11 @@ namespace Assignment.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Note>> Get()
         {
-            var notes = _dataContext.Notes.ToList();
+            var notes = _dataContext.Notes
+                .Include(y => y.Comment)
+                .Include(y => y.Replies)
+                .AsNoTracking()
+                .ToList();
             return notes;
         }
 
